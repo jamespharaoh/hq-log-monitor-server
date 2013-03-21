@@ -3,3 +3,4 @@
 /.stubs
 /results
 /test-configs
+/*.gem
