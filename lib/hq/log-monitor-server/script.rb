@@ -126,6 +126,9 @@ class Script
 		when "/"
 			overview env
 
+		when /^\/service\/([^\/]+)$/
+			service env, :service => $1
+
 		when "/favicon.ico"
 			[ 404, {}, [] ]
 
@@ -182,7 +185,45 @@ class Script
 
 	def overview env
 
-		summaries = @db["summaries"].find.to_a
+		summaries_by_service = {}
+
+		@db["summaries"].find.each do
+			|summary|
+
+			service =
+				summary["_id"]["service"]
+
+			summary_by_service =
+				summaries_by_service[service] ||= {
+					"service" => service,
+					"combined" => { "new" => 0, "total" => 0 },
+					"types" => {},
+				}
+
+			summary_by_service["combined"]["new"] +=
+				summary["combined"]["new"]
+
+			summary_by_service["combined"]["total"] +=
+				summary["combined"]["total"]
+
+			summary["types"].each do
+				|type, type_summary|
+
+				type_summary_by_service =
+					summary_by_service["types"][type] ||= {
+						"new" => 0,
+						"total" => 0,
+					}
+
+				type_summary_by_service["new"] +=
+					type_summary["new"]
+
+				type_summary_by_service["total"] +=
+					type_summary["total"]
+
+			end
+
+		end
 
 		headers = {}
 		html = []
@@ -200,7 +241,7 @@ class Script
 
 		html << "<h1>Overview - Log monitor</h1>\n"
 
-		if summaries.empty?
+		if summaries_by_service.empty?
 			html << "<p>No events have been logged</p>\n"
 		else
 
@@ -217,13 +258,13 @@ class Script
 			html << "</thead>\n"
 			html << "<tbody>\n"
 
-			summaries.each do
-				|summary|
+			summaries_by_service.each do
+				|service, summary|
 
 				html << "<tr class=\"summary\">\n"
 
 				html << "<td class=\"service\">%s</td>\n" % [
-					esc_ht(summary["_id"]["service"]),
+					esc_ht(summary["service"]),
 				]
 
 				html << "<td class=\"alerts\">%s</td>\n" % [
@@ -242,7 +283,7 @@ class Script
 				html << "<td class=\"more\">%s</td>\n" % [
 					"<a href=\"%s\">more...</a>" % [
 						"/service/%s" % [
-							esc_ue(summary["_id"]["service"]),
+							esc_ue(summary["service"]),
 						],
 					],
 				]
@@ -260,6 +301,12 @@ class Script
 		html << "</html>\n"
 
 		return 200, headers, html
+
+	end
+
+	def service env, context
+
+		#summary = @db["summaries"].find({ "service
 
 	end
 
