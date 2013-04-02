@@ -19,7 +19,7 @@ Given /^the log monitor server config:$/ do
 	@log_monitor_server_config.flush
 
 	@log_monitor_server_script =
-		HQ::SysTools::Monitoring::LogMonitorServerScript.new
+		HQ::LogMonitorServer::Script.new
 
 	@log_monitor_server_script.args = [
 		"--config",

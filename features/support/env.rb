@@ -2,7 +2,7 @@ require "capybara/cucumber"
 require "mongo"
 require "net/http"
 
-require "hq/systools/monitoring/log-monitor-server-script"
+require "hq/log-monitor-server/script"
 
 $token = (?a..?z).to_a.sample(10).join
 

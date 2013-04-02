@@ -8,9 +8,8 @@ require "hq/tools/escape"
 require "hq/tools/getopt"
 
 module HQ
-module SysTools
-module Monitoring
-class LogMonitorServerScript
+module LogMonitorServer
+class Script
 
 	include Tools::Escape
 
@@ -293,7 +292,6 @@ class LogMonitorServerScript
 
 	end
 
-end
 end
 end
 end
