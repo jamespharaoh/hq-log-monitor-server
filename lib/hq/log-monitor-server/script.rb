@@ -124,10 +124,13 @@ class Script
 			submit_log_event env
 
 		when "/"
-			overview env
+			overview_page env
 
 		when /^\/service\/([^\/]+)$/
-			service env, :service => $1
+			service_page env, :service => $1
+
+		when /^\/service\/([^\/]+)\/host\/([^\/]+)$/
+			service_host_page env, :service => $1, :host => $2
 
 		when "/favicon.ico"
 			[ 404, {}, [] ]
@@ -183,7 +186,7 @@ class Script
 
 	end
 
-	def overview env
+	def overview_page env
 
 		summaries_by_service = {}
 
@@ -228,18 +231,25 @@ class Script
 		headers = {}
 		html = []
 
-		headers["content-type"] = "text/html"
+		headers["content-type"] = "text/html; charset=utf-8"
 
 		html << "<! DOCTYPE html>\n"
 		html << "<html>\n"
 		html << "<head>\n"
 
-		html << "<title>Overview - Log monitor</title>\n"
+		title =
+			"Overview \u2014 Log monitor"
+
+		html << "<title>%s</title>\n" % [
+			esc_ht(title),
+		]
 
 		html << "</head>\n"
 		html << "<body>\n"
 
-		html << "<h1>Overview - Log monitor</h1>\n"
+		html << "<h1>%s</h1>\n" % [
+			esc_ht(title),
+		]
 
 		if summaries_by_service.empty?
 			html << "<p>No events have been logged</p>\n"
@@ -304,7 +314,7 @@ class Script
 
 	end
 
-	def service env, context
+	def service_page env, context
 
 		summaries =
 			@db["summaries"]
@@ -314,12 +324,14 @@ class Script
 				.to_a
 
 		title =
-			"Service %s - Log monitor" % [
+			"%s - Log monitor" % [
 				context[:service],
 			]
 
 		headers = {}
 		html = []
+
+		headers["content-type"] = "text/html; charset=utf-8"
 
 		html << "<!DOCTYPE html>\n"
 		html << "<html>\n"
@@ -382,8 +394,109 @@ class Script
 
 				html << "<td class=\"view\">%s</td>\n" % [
 					"<a href=\"%s\">view</a>" % [
-						"/host/%s" % [
+						"/service/%s/host/%s" % [
+							esc_ue(summary["_id"]["service"]),
 							esc_ue(summary["_id"]["host"]),
+						],
+					],
+				]
+
+				html << "</tr>\n"
+
+			end
+
+			html << "</tbody>\n"
+			html << "</table>\n"
+
+		end
+
+		html << "</body>\n"
+		html << "</html>\n"
+
+		return 200, headers, html
+
+	end
+
+	def service_host_page env, context
+
+		events =
+			@db["events"]
+				.find({
+					"source.service" => context[:service],
+					"source.host" => context[:host],
+				})
+				.to_a
+
+		title =
+			"%s %s \u2014 Log monitor" % [
+				context[:host],
+				context[:service],
+			]
+
+		headers = {}
+		html = []
+
+		headers["content-type"] = "text/html; charset=utf-8"
+
+		html << "<!DOCTYPE html>\n"
+		html << "<html>\n"
+		html << "<head>\n"
+
+		html << "<title>%s</title>\n" % [
+			esc_ht(title),
+		]
+
+		html << "</head>\n"
+		html << "<body>\n"
+
+		html << "<h1>%s</h1>\n" % [
+			esc_ht(title),
+		]
+
+		if events.empty?
+			html << "<p>No events have been logged for this service on this " +
+				"host</p>\n"
+		else
+
+			html << "<table id=\"events\">\n"
+			html << "<thead>\n"
+
+			html << "<tr>\n"
+			html << "<th>Timestamp</th>\n"
+			html << "<th>File</th>\n"
+			html << "<th>Line</th>\n"
+			html << "<th>Type</th>\n"
+			html << "<th>View</th>\n"
+			html << "</tr>\n"
+
+			html << "</thead>\n"
+			html << "<tbody>\n"
+
+			events.each do
+				|event|
+
+				html << "<tr class=\"event\">\n"
+
+				html << "<td class=\"timestamp\">%s</td>\n" % [
+					esc_ht(event["timestamp"].to_s),
+				]
+
+				html << "<td class=\"file\">%s</td>\n" % [
+					esc_ht(event["location"]["file"]),
+				]
+
+				html << "<td class=\"line\">%s</td>\n" % [
+					esc_ht(event["location"]["line"].to_s),
+				]
+
+				html << "<td class=\"type\">%s</td>\n" % [
+					esc_ht(event["type"]),
+				]
+
+				html << "<td class=\"view\">%s</td>\n" % [
+					"<a href=\"%s\">view</a>" % [
+						"/event/%s" % [
+							esc_ue(event["_id"].to_s),
 						],
 					],
 				]
