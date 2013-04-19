@@ -57,7 +57,12 @@ class Script
 
 		loop do
 			sleep 1 while Time.now < @next_check
-			do_checks
+			begin
+				do_checks
+			rescue => e
+				$stderr.puts e, *e.backtrace
+				sleep 10
+			end
 		end
 
 	end
