@@ -57,3 +57,11 @@ at_exit do
 	end
 
 end
+
+Before do
+	@command_file = Tempfile.new "cuke-"
+end
+
+After do
+	@command_file.unlink
+end

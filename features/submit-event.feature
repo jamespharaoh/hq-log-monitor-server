@@ -8,6 +8,12 @@ Feature: Log monitor server submit event via HTTP
       <log-monitor-server-config>
         <server port="${port}"/>
         <db host="${db-host}" port="${db-port}" name="${db-name}"/>
+        <icinga command-file="${command-file}">
+          <service name="service" icinga-host="host" icinga-service="service">
+            <type name="warning" level="warning"/>
+            <type name="critical" level="critical"/>
+          </service>
+        </icinga>
       </log-monitor-server-config>
       """
 
@@ -38,4 +44,8 @@ Feature: Log monitor server submit event via HTTP
           warning: { new: 1, total: 1 },
         },
       }
+      """
+    And icinga should receive:
+      """
+      PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       """

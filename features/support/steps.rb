@@ -14,6 +14,7 @@ Given /^the log monitor server config:$/ do
 	config_string.gsub! "${db-host}", "localhost"
 	config_string.gsub! "${db-port}", "27017"
 	config_string.gsub! "${db-name}", mongo_db_name("logMonitorServer")
+	config_string.gsub! "${command-file}", @command_file.path
 
 	@log_monitor_server_config.write config_string
 	@log_monitor_server_config.flush
@@ -135,5 +136,16 @@ Then /^the (\d+(?:st|nd|rd|th)) summary should be:$/ do
 		end
 
 	end
+
+end
+
+Then /^icinga should receive:$/ do
+	|expected_command|
+
+	command_contents =
+		File.new(@command_file).to_a.map { |line| line.strip }
+
+	command_contents.should \
+		include expected_command
 
 end
