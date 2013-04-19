@@ -79,11 +79,17 @@ class Script
 				@icinga_elem.find("service").each do
 					|service_elem|
 
+					service_name = service_elem["name"]
+
 					critical_count = 0
 					warning_count = 0
 					unknown_count = 0
 
-					summaries_by_service[service_elem["name"]]["types"].each do
+					summaries = summaries_by_service[service_name]
+
+					next unless summaries
+
+					summaries["types"].each do
 						|type_name, type_info|
 
 						type_elem =
