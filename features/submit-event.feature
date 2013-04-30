@@ -17,6 +17,8 @@ Feature: Log monitor server submit event via HTTP
       </log-monitor-server-config>
       """
 
+    And the time is 123456
+
   Scenario: Submit event
 
     When I submit the following event:
@@ -47,5 +49,5 @@ Feature: Log monitor server submit event via HTTP
       """
     And icinga should receive:
       """
-      PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
+      [123456] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       """

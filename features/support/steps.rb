@@ -34,6 +34,13 @@ Given /^the log monitor server config:$/ do
 
 end
 
+Given /^the time is (\d+)$/ do
+	|time_str|
+
+	Time.stub(:now).and_return { Time.at time_str.to_i }
+
+end
+
 After do
 
 	@log_monitor_server_script.stop \

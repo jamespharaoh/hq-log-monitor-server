@@ -1,4 +1,5 @@
 require "capybara/cucumber"
+require "cucumber/rspec/doubles"
 require "mongo"
 require "net/http"
 
