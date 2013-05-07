@@ -96,9 +96,11 @@ Then /^the event should be in the database$/ do
 
 	event.should_not be_nil
 	event["timestamp"].should be_a Time
+	event["status"].should be_a String
 
 	event.delete "_id"
 	event.delete "timestamp"
+	event.delete "status"
 
 	event.should == @submitted_events.first
 
@@ -117,5 +119,19 @@ Then /^the summary should show:$/ do
 		}).first
 
 	summary.should == expected_summary
+
+end
+
+Then /^the event status should be "(.*?)"$/ do
+	|expected_status|
+
+	db = mongo_db("logMonitorServer")
+
+	event =
+		db["events"].find({
+			"_id" => @event_id,
+		}).first
+
+	event["status"].should == expected_status
 
 end

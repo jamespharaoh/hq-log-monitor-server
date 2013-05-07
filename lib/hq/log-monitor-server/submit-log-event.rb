@@ -9,9 +9,10 @@ class Script
 
 		event = MultiJson.load env["rack.input"].read
 
-		# add a timestamp
+		# add some fields
 
 		event["timestamp"] = Time.now
+		event["status"] = "unseen"
 
 		# insert it
 

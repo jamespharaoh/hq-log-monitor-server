@@ -30,3 +30,11 @@ Feature: View and manipulate a single event
     When I visit /event/${event-id}
 
     Then I should see the event
+    And the event status should be "unseen"
+
+  Scenario: Mark as seen
+
+    When I visit /event/${event-id}
+    And I click "mark as seen"
+
+    Then the event status should be "seen"

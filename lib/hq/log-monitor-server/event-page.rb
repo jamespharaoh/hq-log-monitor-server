@@ -11,6 +11,17 @@ class Script
 					"_id" => BSON::ObjectId.from_string(context[:event_id]),
 				})
 
+		req = Rack::Request.new env
+
+		if req.request_method == "POST" \
+			&& req.params["mark-as-seen"]
+
+			event["status"] = "seen"
+
+			@db["events"].save event
+
+		end
+
 		title =
 			"Event %s \u2014 Log monitor" % [
 				context[:event_id],
@@ -128,6 +139,18 @@ class Script
 			html << "</table>\n"
 
 		end
+
+		html << "<form method=\"post\">\n"
+
+		html <<
+			"<p>" +
+			"<input " +
+				"type=\"submit\" " +
+				"name=\"mark-as-seen\" " +
+				"value=\"mark as seen\">" +
+			"</p>\n"
+
+		html << "</form>\n"
 
 		html << "</body>\n"
 		html << "</html>\n"

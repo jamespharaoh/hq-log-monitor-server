@@ -1,12 +1,19 @@
 When /^I visit (\/.*)$/ do
-	|url|
+	|url_raw|
 
-	url.gsub! /\$\{([-a-z]+)\}/ do
+	url = url_raw.gsub /\$\{([-a-z]+)\}/ do
 		var_name = $1.gsub "-", "_"
 		instance_variable_get "@#{var_name}"
 	end
 
 	visit url
+
+end
+
+When /^I click "(.*?)"$/ do
+	|target_str|
+
+	click_on target_str
 
 end
 
