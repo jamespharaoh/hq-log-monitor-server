@@ -14,7 +14,7 @@ Feature: Log monitor server overview
 
   Scenario: No events
 
-    When I visit the overview page
+    When I visit /
 
     Then I should see no summaries
 
@@ -36,7 +36,7 @@ Feature: Log monitor server overview
       },
       """
 
-    When I visit the overview page
+    When I visit /
 
     Then I should see 1 summary
     And the 1st summary should be:

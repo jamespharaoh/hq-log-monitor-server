@@ -75,6 +75,12 @@ When /^I submit the following events?:$/ do
 
 	@submitted_events = events_data
 
+	# get the event id
+
+	db = mongo_db("logMonitorServer")
+	event = db["events"].find.first
+	@event_id = event["_id"] if event
+
 end
 
 Then /^I should receive a (\d+) response$/ do
@@ -111,48 +117,5 @@ Then /^the summary should show:$/ do
 		}).first
 
 	summary.should == expected_summary
-
-end
-
-# ui steps
-
-When /^I visit the overview page$/ do
-	visit "/"
-end
-
-Then /^I should see no summaries$/ do
-	page.should have_content "No events have been logged"
-end
-
-Then /^I should see (\d+) summar(?:y|ies)$/ do
-	|count_str|
-	count = count_str.to_i
-	find("#summaries").should have_css(".summary", :count => count)
-end
-
-Then /^the (\d+(?:st|nd|rd|th)) summary should be:$/ do
-	|index_str, fields|
-
-	index = index_str.to_i
-
-	within "#summaries" do
-
-		fields.hashes.each do
-			|row|
-			find(".#{row["name"]}").text.should == row["value"]
-		end
-
-	end
-
-end
-
-Then /^icinga should receive:$/ do
-	|expected_command|
-
-	command_contents =
-		File.new(@command_file).to_a.map { |line| line.strip }
-
-	command_contents.should \
-		include expected_command
 
 end
