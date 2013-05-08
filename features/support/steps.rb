@@ -75,11 +75,15 @@ When /^I submit the following events?:$/ do
 
 	@submitted_events = events_data
 
-	# get the event id
+	# store information about the event (assuming it's the only one)
 
 	db = mongo_db("logMonitorServer")
 	event = db["events"].find.first
-	@event_id = event["_id"] if event
+
+	if event
+		@event_id = event["_id"]
+		@source = event["source"]
+	end
 
 end
 
@@ -91,7 +95,6 @@ end
 Then /^the event should be in the database$/ do
 
 	db = mongo_db("logMonitorServer")
-
 	event = db["events"].find.first
 
 	event.should_not be_nil
@@ -111,12 +114,7 @@ Then /^the summary should show:$/ do
 
 	expected_summary = YAML.load expected_string
 
-	db = mongo_db("logMonitorServer")
-
-	summary =
-		db["summaries"].find({
-			"_id" => expected_summary["_id"],
-		}).first
+	summary = get_summary expected_summary["_id"]
 
 	summary.should == expected_summary
 
@@ -125,13 +123,60 @@ end
 Then /^the event status should be "(.*?)"$/ do
 	|expected_status|
 
-	db = mongo_db("logMonitorServer")
-
-	event =
-		db["events"].find({
-			"_id" => @event_id,
-		}).first
+	event = get_event @event_id
 
 	event["status"].should == expected_status
+
+end
+
+Then /^the summary new should be (\d+)$/ do
+	|count_str|
+
+	summary = get_summary @source
+
+	summary["combined"]["new"].should == count_str.to_i
+
+end
+
+Then /^the summary total should be (\d+)$/ do
+	|count_str|
+
+	summary = get_summary @source
+
+	summary["combined"]["total"].should == count_str.to_i
+
+end
+
+Then /^the summary new for type "(.*?)" should be (\d+)$/ do
+	|type, count_str|
+
+	summary = get_summary @source
+
+	summary["types"][type]["new"].should == count_str.to_i
+
+end
+
+Then /^the summary total for type "(.*?)" should be (\d+)$/ do
+	|type, count_str|
+
+	summary = get_summary @source
+
+	summary["types"][type]["total"].should == count_str.to_i
+
+end
+
+Then /^icinga should receive:$/ do
+	|expected_commands|
+
+	command_contents =
+		File.new(@command_file).to_a.map { |line| line.strip }
+
+	expected_commands.split("\n").each do
+		|expected_command|
+
+		command_contents.should \
+			include expected_command
+
+	end
 
 end

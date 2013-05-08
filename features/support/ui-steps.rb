@@ -43,17 +43,6 @@ Then /^the (\d+(?:st|nd|rd|th)) summary should be:$/ do
 
 end
 
-Then /^icinga should receive:$/ do
-	|expected_command|
-
-	command_contents =
-		File.new(@command_file).to_a.map { |line| line.strip }
-
-	command_contents.should \
-		include expected_command
-
-end
-
 Then /^I should see the event$/ do
 
 	find("#event #id td").text.should == @event_id.to_s

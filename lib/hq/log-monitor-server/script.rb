@@ -168,52 +168,6 @@ class Script
 
 	end
 
-	def get_summaries_by_service
-
-		summaries_by_service = {}
-
-		@db["summaries"].find.each do
-			|summary|
-
-			service =
-				summary["_id"]["service"]
-
-			summary_by_service =
-				summaries_by_service[service] ||= {
-					"service" => service,
-					"combined" => { "new" => 0, "total" => 0 },
-					"types" => {},
-				}
-
-			summary_by_service["combined"]["new"] +=
-				summary["combined"]["new"]
-
-			summary_by_service["combined"]["total"] +=
-				summary["combined"]["total"]
-
-			summary["types"].each do
-				|type, type_summary|
-
-				type_summary_by_service =
-					summary_by_service["types"][type] ||= {
-						"new" => 0,
-						"total" => 0,
-					}
-
-				type_summary_by_service["new"] +=
-					type_summary["new"]
-
-				type_summary_by_service["total"] +=
-					type_summary["total"]
-
-			end
-
-		end
-
-		return summaries_by_service
-
-	end
-
 	def sf format, *args
 
 		ret = []
@@ -252,6 +206,7 @@ end
 
 require "hq/log-monitor-server/do-checks"
 require "hq/log-monitor-server/event-page"
+require "hq/log-monitor-server/logic"
 require "hq/log-monitor-server/overview-page"
 require "hq/log-monitor-server/service-host-page"
 require "hq/log-monitor-server/service-page"

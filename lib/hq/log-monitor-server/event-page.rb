@@ -5,32 +5,39 @@ class Script
 
 	def event_page env, context
 
+		req = Rack::Request.new env
+
+		# process form stuff
+
+		if req.request_method == "POST" \
+			&& req.params["mark-as-seen"]
+
+			mark_event_as_seen context[:event_id]
+
+		end
+
+		# read from database
+
 		event =
 			@db["events"]
 				.find_one({
 					"_id" => BSON::ObjectId.from_string(context[:event_id]),
 				})
 
-		req = Rack::Request.new env
+		# set headers
 
-		if req.request_method == "POST" \
-			&& req.params["mark-as-seen"]
+		headers = {}
 
-			event["status"] = "seen"
+		headers["content-type"] = "text/html; charset=utf-8"
 
-			@db["events"].save event
+		# create page
 
-		end
+		html = []
 
 		title =
 			"Event %s \u2014 Log monitor" % [
 				context[:event_id],
 			]
-
-		headers = {}
-		html = []
-
-		headers["content-type"] = "text/html; charset=utf-8"
 
 		html << "<!DOCTYPE html>\n"
 		html << "<html>\n"
@@ -154,6 +161,8 @@ class Script
 
 		html << "</body>\n"
 		html << "</html>\n"
+
+		# return
 
 		return 200, headers, html
 

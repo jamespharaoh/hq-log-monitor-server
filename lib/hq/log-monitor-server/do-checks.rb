@@ -34,13 +34,13 @@ class Script
 								")
 
 							if ! type_elem
-								unknown_count += 1
+								unknown_count += type_info["new"]
 							elsif type_elem["level"] == "critical"
-								critical_count += 1
+								critical_count += type_info["new"]
 							elsif type_elem["level"] == "warning"
-								warning_count += 1
+								warning_count += type_info["new"]
 							else
-								unknown_count += 1
+								unknown_count += type_info["new"]
 							end
 						end
 					end

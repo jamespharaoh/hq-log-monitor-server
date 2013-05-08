@@ -33,6 +33,34 @@ def mongo_db name
 	mongo_conn[mongo_db_name name]
 end
 
+def get_event event_id
+
+	db =
+		mongo_db("logMonitorServer")
+
+	event =
+		db["events"].find({
+			"_id" => event_id,
+		}).first
+
+	return event
+
+end
+
+def get_summary source
+
+	db =
+		mongo_db("logMonitorServer")
+
+	summary =
+		db["summaries"].find({
+			"_id" => source,
+		}).first
+
+	return summary
+
+end
+
 After do
 
 	@db_names.each do
