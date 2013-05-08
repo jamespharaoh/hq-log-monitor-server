@@ -77,10 +77,15 @@ class Script
 			summaries_by_service.each do
 				|service, summary|
 
-				html << "<tr class=\"summary\">\n"
+				html << "<tr class=\"%s\">\n" % [
+					esc_ht([
+						"summary",
+						class_for_summary(summary),
+					].compact.join(" "))
+				]
 
 				html << "<td class=\"service\">%s</td>\n" % [
-					esc_ht(summary["service"]),
+					esc_ht(summary["_id"]["service"]),
 				]
 
 				html << "<td class=\"new\">%s</td>\n" % [
@@ -94,7 +99,7 @@ class Script
 				html << "<td class=\"view\">%s</td>\n" % [
 					"<a href=\"%s\">view</a>" % [
 						"/service/%s" % [
-							esc_ue(summary["service"]),
+							esc_ue(summary["_id"]["service"]),
 						],
 					],
 				]

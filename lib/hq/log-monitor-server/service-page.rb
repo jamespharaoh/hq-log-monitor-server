@@ -87,7 +87,12 @@ class Script
 			summaries.each do
 				|summary|
 
-				html << "<tr class=\"summary\">\n"
+				html << "<tr class=\"%s\">\n" % [
+					esc_ht([
+						"summary",
+						class_for_summary(summary),
+					].compact.join(" "))
+				]
 
 				html << "<td class=\"host\">%s</td>\n" % [
 					esc_ht(summary["_id"]["host"]),

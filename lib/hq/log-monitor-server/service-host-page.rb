@@ -130,13 +130,11 @@ class Script
 			events.each do
 				|event|
 
-				type_class =
-					class_for_type \
-						event["source"]["service"],
-						event["type"]
-
 				html << "<tr class=\"%s\">\n" % [
-					[ "event", type_class ].compact.join(" "),
+					[
+						"event",
+						class_for_event(event),
+					].compact.join(" "),
 				]
 
 				html << "<td class=\"timestamp\">%s</td>\n" % [

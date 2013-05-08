@@ -266,7 +266,9 @@ class Script
 
 			summary_by_service =
 				summaries_by_service[service] ||= {
-					"service" => service,
+					"_id" => {
+						"service" => service,
+					},
 					"combined" => { "new" => 0, "total" => 0 },
 					"types" => {},
 				}
