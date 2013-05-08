@@ -23,6 +23,25 @@ class Script
 
 		end
 
+		if req.request_method == "POST" \
+			&& req.params["delete"]
+
+			event =
+				delete_event context[:event_id]
+
+			resp =
+				Rack::Response.new
+
+			resp.redirect "/service-host/%s/%s/%s" % [
+				event["source"]["service"],
+				event["source"]["class"],
+				event["source"]["host"],
+			]
+
+			return resp
+
+		end
+
 		# read from database
 
 		event =
@@ -233,6 +252,12 @@ class Script
 					"value=\"mark as unseen\">\n"
 
 		end
+
+		html <<
+			"<input " +
+				"type=\"submit\" " +
+				"name=\"delete\" " +
+				"value=\"delete\">\n"
 
 		html << "</p>\n"
 

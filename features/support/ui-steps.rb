@@ -17,6 +17,13 @@ When /^I click "(.*?)"$/ do
 
 end
 
+Then /^I should be sent to (\/.*)$/ do
+	|expected_url|
+
+	current_path.should == expected_url
+
+end
+
 Then /^I should see no summaries$/ do
 	page.should have_content "No events have been logged"
 end

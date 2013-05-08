@@ -124,6 +124,67 @@ class Script
 
 	end
 
+	def delete_event event_id
+
+		# fetch it
+
+		event = get_event event_id
+
+		return nil unless event
+
+		# delete it
+
+		@db["events"].remove({
+			"_id" => event["_id"],
+		})
+
+		event_count =
+			@db.get_last_error["n"]
+
+		return event unless event_count > 0
+
+		# update summary
+
+		case event["status"]
+
+		when "unseen"
+
+			@db["summaries"].update(
+				{ "_id" => event["source"] },
+				{ "$inc" => {
+					"combined.new" => -1,
+					"combined.total" => -1,
+					"types.#{event["type"]}.new" => -1,
+					"types.#{event["type"]}.total" => -1,
+				} }
+			)
+
+		when "seen"
+
+			@db["summaries"].update(
+				{ "_id" => event["source"] },
+				{ "$inc" => {
+					"combined.total" => -1,
+					"types.#{event["type"]}.total" => -1,
+				} }
+			)
+
+		else
+
+			raise "Error 3084789190"
+
+		end
+
+		# notify icinga checks
+
+		do_checks
+
+		# and return
+
+		return event
+
+	end
+
 	def get_summaries_by_service
 
 		summaries_by_service = {}

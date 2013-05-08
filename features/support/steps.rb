@@ -129,6 +129,14 @@ Then /^the event status should be "(.*?)"$/ do
 
 end
 
+Then /^the event should be deleted$/ do
+
+	event = get_event @event_id
+
+	event.should be_nil
+
+end
+
 Then /^the summary new should be (\d+)$/ do
 	|count_str|
 

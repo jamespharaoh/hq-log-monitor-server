@@ -99,3 +99,50 @@ Scenario: Mark as unseen
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       """
+
+  Scenario: Delete unseen
+
+    Given the time is 20
+
+    When I visit /event/${event-id}
+    And I click "delete"
+
+    Then I should be sent to /service-host/service/class/host
+
+    And the event should be deleted
+
+    And the summary new should be 0
+    And the summary total should be 0
+    And the summary new for type "warning" should be 0
+    And the summary total for type "warning" should be 0
+
+    And icinga should receive:
+      """
+      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
+      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
+      [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
+      """
+
+  Scenario: Delete seen
+
+    Given the time is 20
+
+    When I visit /event/${event-id}
+    And I click "mark as seen"
+    And I click "delete"
+
+    Then I should be sent to /service-host/service/class/host
+
+    And the event should be deleted
+
+    And the summary new should be 0
+    And the summary total should be 0
+    And the summary new for type "warning" should be 0
+    And the summary total for type "warning" should be 0
+
+    And icinga should receive:
+      """
+      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
+      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
+      [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
+      """
