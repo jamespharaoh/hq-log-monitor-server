@@ -81,6 +81,54 @@ class Script
 
 	end
 
+	def class_for_event event
+
+		return nil \
+			unless event["status"] == "unseen"
+
+		return class_for_type \
+			event["source"]["service"],
+			event["type"]
+
+	end
+
+	def level_for_summary summary
+
+		critical = false
+		warning = false
+
+		summary["types"].each do
+			|type_name, type_info|
+
+			next unless type_info["new"] > 0
+
+			case level_for_type summary["_id"]["service"], type_name
+
+			when "critical"
+				critical = true
+
+			when "warning"
+				warning = true
+
+			end
+
+		end
+
+		return "critical" if critical
+		return "warning" if warning
+
+		return nil
+
+	end
+
+	def class_for_summary summary
+
+		level = level_for_summary summary
+
+		return class_for_level level
+
+	end
+
 end
 
 end

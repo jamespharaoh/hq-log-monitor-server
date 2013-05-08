@@ -119,6 +119,79 @@ describe Script do
 
 	end
 
+	context "#level_for_summary" do
+
+		before do
+
+			subject.instance_variable_set \
+				"@icinga_elem",
+				XML::Document.string("
+					<icinga>
+						<service name=\"service\">
+							<type name=\"critical\" level=\"critical\"/>
+							<type name=\"warning\" level=\"warning\"/>
+						</service>
+					</icinga>
+				")
+
+		end
+
+		it "returns critical if any are critical" do
+
+			summary = {
+				"_id" => {
+					"service" => "service",
+				},
+				"types" => {
+					"critical" => { "new" => 1 },
+					"warning" => { "new" => 1 },
+					"other" => { "new" => 1 },
+				},
+			}
+
+			ret = subject.level_for_summary summary
+
+			ret.should == "critical"
+
+		end
+
+		it "returns warning if any are warning but none are critical" do
+
+			summary = {
+				"_id" => {
+					"service" => "service",
+				},
+				"types" => {
+					"warning" => { "new" => 1 },
+					"other" => { "new" => 1 },
+				},
+			}
+
+			ret = subject.level_for_summary summary
+
+			ret.should == "warning"
+
+		end
+
+		it "returns nil if there none are warning or critical" do
+
+			summary = {
+				"_id" => {
+					"service" => "service",
+				},
+				"types" => {
+					"other" => { "new" => 1 },
+				},
+			}
+
+			ret = subject.level_for_summary summary
+
+			ret.should be_nil
+
+		end
+
+	end
+
 end
 
 end
