@@ -84,39 +84,11 @@ class Script
 				]
 
 				html << "<td class=\"new\">%s</td>\n" % [
-					esc_ht(
-						summary["combined"]["new"] > 0 ? "%s (%s)" % [
-							esc_ht(summary["combined"]["new"].to_s),
-							summary["types"]
-								.select {
-									|type, counts|
-									counts["new"] > 0
-								}
-								.map {
-									|type, counts|
-									"%s %s" % [ counts["new"], type ]
-								}
-								.join(", ")
-						] : "0"
-					),
+					esc_ht(status_breakdown(summary, "new")),
 				]
 
 				html << "<td class=\"total\">%s</td>\n" % [
-					esc_ht(
-						summary["combined"]["total"] > 0 ? "%s (%s)" % [
-							esc_ht(summary["combined"]["total"].to_s),
-							summary["types"]
-								.select {
-									|type, counts|
-									counts["total"] > 0
-								}
-								.map {
-									|type, counts|
-									"%s %s" % [ counts["total"], type ]
-								}
-								.join(", ")
-						] : "0"
-					),
+					esc_ht(status_breakdown(summary, "total")),
 				]
 
 				html << "<td class=\"view\">%s</td>\n" % [

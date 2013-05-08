@@ -210,6 +210,7 @@ end
 require "hq/log-monitor-server/do-checks"
 require "hq/log-monitor-server/event-page"
 require "hq/log-monitor-server/logic"
+require "hq/log-monitor-server/misc"
 require "hq/log-monitor-server/overview-page"
 require "hq/log-monitor-server/service-host-page"
 require "hq/log-monitor-server/service-page"
