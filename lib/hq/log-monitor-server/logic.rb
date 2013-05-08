@@ -185,6 +185,75 @@ class Script
 
 	end
 
+	def delete_all source
+
+		# get types
+
+		query = {
+			"source.service" => source["service"],
+			"source.class" => source["class"],
+			"source.host" => source["host"],
+		}
+
+		types =
+			@db["events"].distinct "type", query
+
+		types.each do
+			|type|
+
+			# delete events
+
+			query = {
+				"source.service" => source["service"],
+				"source.class" => source["class"],
+				"source.host" => source["host"],
+				"status" => "unseen",
+				"type" => type,
+			}
+
+			@db["events"].remove query
+
+			unseen_count =
+				@db.get_last_error["n"]
+
+			query = {
+				"source.service" => source["service"],
+				"source.class" => source["class"],
+				"source.host" => source["host"],
+				"status" => "seen",
+				"type" => type,
+			}
+
+			@db["events"].remove query
+
+			seen_count =
+				@db.get_last_error["n"]
+
+			# update summaries
+
+			@db["summaries"].update(
+				{
+					"_id.service" => source["service"],
+					"_id.class" => source["class"],
+					"_id.host" => source["host"],
+				}, {
+					"$inc" => {
+						"combined.new" => - unseen_count,
+						"combined.total" => - unseen_count - seen_count,
+						"types.#{type}.new" => - unseen_count,
+						"types.#{type}.total" => - unseen_count - seen_count,
+					}
+				}
+			)
+
+		end
+
+		# notify icinga checks
+
+		do_checks
+
+	end
+
 	def get_summaries_by_service
 
 		summaries_by_service = {}

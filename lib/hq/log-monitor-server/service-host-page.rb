@@ -22,6 +22,13 @@ class Script
 
 		end
 
+		if req.request_method == "POST" \
+			&& req.params["delete-all"]
+
+			delete_all source
+
+		end
+
 		# read from database
 
 		events =
@@ -97,8 +104,10 @@ class Script
 		]
 
 		if events.empty?
+
 			html << "<p>No events have been logged for this service on this " +
 				"host</p>\n"
+
 		else
 
 			html << "<table id=\"events\" class=\"table table-striped\">\n"
@@ -174,6 +183,12 @@ class Script
 						"value=\"mark all as seen\">\n"
 
 			end
+
+			html <<
+				"<input " +
+					"type=\"submit\" " +
+					"name=\"delete-all\" " +
+					"value=\"delete all\">\n"
 
 			html << "</p>\n"
 

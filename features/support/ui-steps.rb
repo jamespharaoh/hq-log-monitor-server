@@ -63,6 +63,11 @@ Then /^I should see (\d+) events$/ do
 
 end
 
+Then /^I should not see any events$/ do
+	all("#events")
+	# TODO
+end
+
 Then /^I should see a button "(.*?)"$/ do
 	|label|
 
