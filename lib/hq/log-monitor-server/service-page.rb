@@ -112,8 +112,9 @@ class Script
 
 				html << "<td class=\"view\">%s</td>\n" % [
 					"<a href=\"%s\">view</a>" % [
-						"/service/%s/host/%s" % [
+						"/service-host/%s/%s/%s" % [
 							esc_ue(summary["_id"]["service"]),
+							esc_ue(summary["_id"]["class"]),
 							esc_ue(summary["_id"]["host"]),
 						],
 					],

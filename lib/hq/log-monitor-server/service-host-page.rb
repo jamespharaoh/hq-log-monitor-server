@@ -5,11 +5,31 @@ class Script
 
 	def service_host_page env, context
 
+		req = Rack::Request.new env
+
+		source = {
+			"class" => context[:class],
+			"host" => context[:host],
+			"service" => context[:service],
+		}
+
+		# process form stuff
+
+		if req.request_method == "POST" \
+			&& req.params["mark-all-as-seen"]
+
+			mark_all_as_seen source
+
+		end
+
+		# read from database
+
 		events =
 			@db["events"]
 				.find({
-					"source.service" => context[:service],
-					"source.host" => context[:host],
+					"source.class" => source["class"],
+					"source.host" => source["host"],
+					"source.service" => source["service"],
 				})
 				.to_a
 
@@ -96,6 +116,8 @@ class Script
 			html << "</thead>\n"
 			html << "<tbody>\n"
 
+			unseen_count = 0
+
 			events.each do
 				|event|
 
@@ -131,10 +153,31 @@ class Script
 
 				html << "</tr>\n"
 
+				unseen_count += 1 \
+					if event["status"] == "unseen"
+
 			end
 
 			html << "</tbody>\n"
 			html << "</table>\n"
+
+			html << "<form method=\"post\">\n"
+
+			html << "<p>\n"
+
+			if unseen_count > 0
+
+				html <<
+					"<input " +
+						"type=\"submit\" " +
+						"name=\"mark-all-as-seen\" " +
+						"value=\"mark all as seen\">\n"
+
+			end
+
+			html << "</p>\n"
+
+			html << "</form>\n"
 
 		end
 

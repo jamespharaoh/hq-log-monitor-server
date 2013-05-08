@@ -37,6 +37,67 @@ class Script
 
 	end
 
+	def mark_all_as_seen source
+
+		# get types
+
+		query = {
+			"source.service" => source["service"],
+			"source.class" => source["class"],
+			"source.host" => source["host"],
+			"status" => "unseen",
+		}
+
+		types =
+			@db["events"].distinct "type", query
+
+		types.each do
+			|type|
+
+			# update events
+
+			query = {
+				"source.service" => source["service"],
+				"source.class" => source["class"],
+				"source.host" => source["host"],
+				"status" => "unseen",
+				"type" => type,
+			}
+
+			update = {
+				"$set" => {
+					"status" => "seen",
+				},
+			}
+
+			@db["events"].update query, update, :multi => true
+
+			event_count =
+				@db.get_last_error["n"]
+
+			# update summaries
+
+			@db["summaries"].update(
+				{
+					"_id.service" => source["service"],
+					"_id.class" => source["class"],
+					"_id.host" => source["host"],
+				}, {
+					"$inc" => {
+						"combined.new" => -event_count,
+						"types.#{type}.new" => -event_count,
+					}
+				}
+			)
+
+		end
+
+		# notify icinga checks
+
+		do_checks
+
+	end
+
 	def mark_event_as_unseen event_id
 
 		event = get_event event_id

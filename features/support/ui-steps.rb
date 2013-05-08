@@ -49,6 +49,13 @@ Then /^I should see the event$/ do
 
 end
 
+Then /^I should see (\d+) events$/ do
+	|count_str|
+
+	all("#events tbody tr").count.should == count_str.to_i
+
+end
+
 Then /^I should see a button "(.*?)"$/ do
 	|label|
 

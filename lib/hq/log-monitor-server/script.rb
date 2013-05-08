@@ -155,8 +155,8 @@ class Script
 		when /^\/service\/([^\/]+)$/
 			service_page env, :service => $1
 
-		when /^\/service\/([^\/]+)\/host\/([^\/]+)$/
-			service_host_page env, :service => $1, :host => $2
+		when /^\/service-host\/([^\/]+)\/([^\/]+)\/([^\/]+)$/
+			service_host_page env, :service => $1, :class => $2, :host => $3
 
 		when /^\/event\/([^\/]+)$/
 			event_page env, :event_id => $1
