@@ -68,7 +68,6 @@ Scenario: Mark as seen
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       """
@@ -94,7 +93,6 @@ Scenario: Mark as unseen
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
@@ -118,7 +116,6 @@ Scenario: Mark as unseen
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       """
@@ -142,7 +139,6 @@ Scenario: Mark as unseen
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       """

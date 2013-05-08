@@ -58,7 +58,6 @@ Feature: View and manipulate all events for a service/host combo
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 2 warning
       """
@@ -81,7 +80,6 @@ Feature: View and manipulate all events for a service/host combo
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 2 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
@@ -105,7 +103,6 @@ Feature: View and manipulate all events for a service/host combo
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 2 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
@@ -130,7 +127,6 @@ Feature: View and manipulate all events for a service/host combo
 
     And icinga should receive:
       """
-      [10] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 1 warning
       [10] PROCESS_SERVICE_CHECK_RESULT;host;service;1;WARNING 2 warning
       [20] PROCESS_SERVICE_CHECK_RESULT;host;service;0;OK no new events
