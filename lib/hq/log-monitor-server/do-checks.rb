@@ -28,20 +28,15 @@ class Script
 						summaries["types"].each do
 							|type_name, type_info|
 
-							type_elem =
-								service_elem.find_first("
-									type [@name = #{esc_xp type_name}]
-								")
-
-							if ! type_elem
-								unknown_count += type_info["new"]
-							elsif type_elem["level"] == "critical"
+							case level_for_type service_name, type_name
+							when "critical"
 								critical_count += type_info["new"]
-							elsif type_elem["level"] == "warning"
+							when "warning"
 								warning_count += type_info["new"]
 							else
 								unknown_count += type_info["new"]
 							end
+
 						end
 					end
 
