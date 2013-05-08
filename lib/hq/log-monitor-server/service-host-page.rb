@@ -32,8 +32,45 @@ class Script
 			esc_ht(title),
 		]
 
+		html << "<link href=\"%s\" rel=\"stylesheet\">" % [
+			"%s/css/bootstrap-combined.min.css" % [
+				@assets_elem["bootstrap"],
+			],
+		]
+
+		html << "<script src=\"%s\"></script>" % [
+			"%s/js/bootstrap.min.js" % [
+				@assets_elem["bootstrap"],
+			],
+		]
+
 		html << "</head>\n"
 		html << "<body>\n"
+
+		html << "<div class=\"navbar navbar-static-top\">\n"
+		html << "<div class=\"navbar-inner\">\n"
+		html << "<div class=\"container\">\n"
+		html << "<ul class=\"nav\">\n"
+		html << "<li><a href=\"/\">Overview</a></li>\n"
+		html << "<li><a href=\"%s\">Service</a></li>\n" % [
+			esc_ht("/service/%s" % [
+				context[:service],
+			]),
+		]
+		html << "<li class=\"active\"><a href=\"%s\">Host</a></li>\n" % [
+			esc_ht("/service/%s/host/%s" % [
+				context[:service],
+				context[:host],
+			])
+		]
+		html << "</ul>\n"
+		html << "</div>\n"
+		html << "</div>\n"
+		html << "</div>\n"
+
+		html << "<div class=\"container\">\n"
+		html << "<div class=\"row\">\n"
+		html << "<div class=\"span12\">\n"
 
 		html << "<h1>%s</h1>\n" % [
 			esc_ht(title),
@@ -44,7 +81,7 @@ class Script
 				"host</p>\n"
 		else
 
-			html << "<table id=\"events\">\n"
+			html << "<table id=\"events\" class=\"table table-striped\">\n"
 			html << "<thead>\n"
 
 			html << "<tr>\n"
@@ -95,6 +132,10 @@ class Script
 			html << "</table>\n"
 
 		end
+
+		html << "</div>\n"
+		html << "</div>\n"
+		html << "</div>\n"
 
 		html << "</body>\n"
 		html << "</html>\n"

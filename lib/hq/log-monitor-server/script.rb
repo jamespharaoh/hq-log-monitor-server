@@ -103,6 +103,9 @@ class Script
 		@icinga_elem =
 			@config_elem.find_first("icinga")
 
+		@assets_elem =
+			@config_elem.find_first("assets")
+
 	end
 
 	def connect_db

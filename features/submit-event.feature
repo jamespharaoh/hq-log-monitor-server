@@ -14,6 +14,7 @@ Feature: Log monitor server submit event via HTTP
             <type name="critical" level="critical"/>
           </service>
         </icinga>
+        <assets bootstrap=""/>
       </log-monitor-server-config>
       """
 

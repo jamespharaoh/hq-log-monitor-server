@@ -9,6 +9,7 @@ Feature: Log monitor server overview
         <server port="${port}"/>
         <db host="${db-host}" port="${db-port}" name="${db-name}"/>
         <icinga command-file="/dev/null"/>
+        <assets bootstrap=""/>
       </log-monitor-server-config>
       """
 

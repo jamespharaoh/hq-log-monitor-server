@@ -13,6 +13,7 @@ Feature: View and manipulate a single event
             <type name="critical" level="critical"/>
           </service>
         </icinga>
+        <assets bootstrap=""/>
       </log-monitor-server-config>
       """
 

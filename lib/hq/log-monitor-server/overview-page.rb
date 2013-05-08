@@ -24,8 +24,34 @@ class Script
 			esc_ht(title),
 		]
 
+		html << "<link href=\"%s\" rel=\"stylesheet\">" % [
+			"%s/css/bootstrap-combined.min.css" % [
+				@assets_elem["bootstrap"],
+			],
+		]
+
+		html << "<script src=\"%s\"></script>" % [
+			"%s/js/bootstrap.min.js" % [
+				@assets_elem["bootstrap"],
+			],
+		]
+
 		html << "</head>\n"
 		html << "<body>\n"
+
+		html << "<div class=\"navbar navbar-static-top\">\n"
+		html << "<div class=\"navbar-inner\">\n"
+		html << "<div class=\"container\">\n"
+		html << "<ul class=\"nav\">\n"
+		html << "<li class=\"active\"><a href=\"/\">Overview</a></li>\n"
+		html << "</ul>\n"
+		html << "</div>\n"
+		html << "</div>\n"
+		html << "</div>\n"
+
+		html << "<div class=\"container\">\n"
+		html << "<div class=\"row\">\n"
+		html << "<div class=\"span12\">\n"
 
 		html << "<h1>%s</h1>\n" % [
 			esc_ht(title),
@@ -35,7 +61,7 @@ class Script
 			html << "<p>No events have been logged</p>\n"
 		else
 
-			html << "<table id=\"summaries\">\n"
+			html << "<table class=\"table table-striped\" id=\"summaries\">\n"
 			html << "<thead>\n"
 
 			html << "<tr>\n"
@@ -86,6 +112,10 @@ class Script
 			html << "</table>\n"
 
 		end
+
+		html << "</div>\n"
+		html << "</div>\n"
+		html << "</div>\n"
 
 		html << "</body>\n"
 		html << "</html>\n"
