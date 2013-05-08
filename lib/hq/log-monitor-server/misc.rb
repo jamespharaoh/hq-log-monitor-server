@@ -1,7 +1,11 @@
+require "hq/tools/escape"
+
 module HQ
 module LogMonitorServer
 
 class Script
+
+	include Tools::Escape
 
 	def status_breakdown summary, status
 
@@ -29,6 +33,29 @@ class Script
 			]
 
 		end
+
+	end
+
+	def level_for_type service_name, type_name
+
+		service_elem =
+			@icinga_elem.find_first("
+				service [@name = #{esc_xp service_name}]
+			")
+
+		return nil unless service_elem
+
+		type_elem =
+			service_elem.find_first("
+				type [@name = #{esc_xp type_name}]
+			")
+
+		return nil unless type_elem
+
+		level = type_elem["level"]
+
+		return level == "" ? nil : level
+
 
 	end
 
