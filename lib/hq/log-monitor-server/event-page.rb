@@ -99,8 +99,9 @@ class Script
 			]),
 		]
 		html << "<li><a href=\"%s\">Host</a></li>\n" % [
-			esc_ht("/service/%s/host/%s" % [
+			esc_ht("/service-host/%s/%s/%s" % [
 				event["source"]["service"],
+				event["source"]["class"],
 				event["source"]["host"],
 			])
 		]
