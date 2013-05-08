@@ -66,8 +66,8 @@ class Script
 
 			html << "<tr>\n"
 			html << "<th>Service</th>\n"
-			html << "<th>Alerts</th>\n"
-			html << "<th>Details</th>\n"
+			html << "<th>New</th>\n"
+			html << "<th>Total</th>\n"
 			html << "<th>View</th>\n"
 			html << "</tr>\n"
 
@@ -83,16 +83,39 @@ class Script
 					esc_ht(summary["service"]),
 				]
 
-				html << "<td class=\"alerts\">%s</td>\n" % [
-					esc_ht(summary["combined"]["new"].to_s),
+				html << "<td class=\"new\">%s</td>\n" % [
+					esc_ht(
+						summary["combined"]["new"] > 0 ? "%s (%s)" % [
+							esc_ht(summary["combined"]["new"].to_s),
+							summary["types"]
+								.select {
+									|type, counts|
+									counts["new"] > 0
+								}
+								.map {
+									|type, counts|
+									"%s %s" % [ counts["new"], type ]
+								}
+								.join(", ")
+						] : "0"
+					),
 				]
 
-				html << "<td class=\"detail\">%s</td>\n" % [
+				html << "<td class=\"total\">%s</td>\n" % [
 					esc_ht(
-						summary["types"].map {
-							|type, counts|
-							"%s %s" % [ counts["new"], type ]
-						}.join ", "
+						summary["combined"]["total"] > 0 ? "%s (%s)" % [
+							esc_ht(summary["combined"]["total"].to_s),
+							summary["types"]
+								.select {
+									|type, counts|
+									counts["total"] > 0
+								}
+								.map {
+									|type, counts|
+									"%s %s" % [ counts["total"], type ]
+								}
+								.join(", ")
+						] : "0"
 					),
 				]
 

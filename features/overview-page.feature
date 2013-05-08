@@ -41,7 +41,7 @@ Feature: Log monitor server overview
 
     Then I should see 1 summary
     And the 1st summary should be:
-      | name     | value                 |
-      | service  | service               |
-      | alerts   | 2                     |
-      | detail   | 1 warning, 1 critical |
+      | name     | value                     |
+      | service  | service                   |
+      | new      | 2 (1 warning, 1 critical) |
+      | total    | 2 (1 warning, 1 critical) |
