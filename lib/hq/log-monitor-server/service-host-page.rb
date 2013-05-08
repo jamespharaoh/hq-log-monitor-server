@@ -130,16 +130,13 @@ class Script
 			events.each do
 				|event|
 
-				level_class =
-					case level_for_type(
-							event["source"]["service"],
-							event["type"])
-						when "critical" then "error"
-						when "warning" then "warning"
-					end
+				type_class =
+					class_for_type \
+						event["source"]["service"],
+						event["type"]
 
 				html << "<tr class=\"%s\">\n" % [
-					[ "event", level_class ].compact.join(" "),
+					[ "event", type_class ].compact.join(" "),
 				]
 
 				html << "<td class=\"timestamp\">%s</td>\n" % [

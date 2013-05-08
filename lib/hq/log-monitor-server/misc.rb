@@ -59,6 +59,28 @@ class Script
 
 	end
 
+	def class_for_level level
+
+		case level
+
+			when "critical"
+				return "error"
+
+			when "warning"
+				return "warning"
+
+		end
+
+	end
+
+	def class_for_type service, type
+
+		level = level_for_type service, type
+
+		return class_for_level level
+
+	end
+
 end
 
 end
