@@ -48,3 +48,19 @@ Then /^I should see the event$/ do
 	find("#event #id td").text.should == @event_id.to_s
 
 end
+
+Then /^I should see a button "(.*?)"$/ do
+	|label|
+
+	find_button(label).should_not be_nil
+
+end
+
+Then /^I should not see a button "(.*?)"$/ do
+	|label|
+
+	expect {
+		find_button(label)
+	}.to raise_error Capybara::ElementNotFound
+
+end

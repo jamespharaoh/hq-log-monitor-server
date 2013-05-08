@@ -37,6 +37,32 @@ class Script
 
 	end
 
+	def mark_event_as_unseen event_id
+
+		event = get_event event_id
+
+		return if event["status"] == "unseen"
+
+		event["status"] = "unseen"
+
+		@db["events"].save event
+
+		# update summary
+
+		@db["summaries"].update(
+			{ "_id" => event["source"] },
+			{ "$inc" => {
+				"combined.new" => 1,
+				"types.#{event["type"]}.new" => 1,
+			} }
+		)
+
+		# notify icinga checks
+
+		do_checks
+
+	end
+
 	def get_summaries_by_service
 
 		summaries_by_service = {}

@@ -16,6 +16,13 @@ class Script
 
 		end
 
+		if req.request_method == "POST" \
+			&& req.params["mark-as-unseen"]
+
+			mark_event_as_unseen context[:event_id]
+
+		end
+
 		# read from database
 
 		event =
@@ -78,6 +85,13 @@ class Script
 			html << "</tr>\n"
 
 			html << "<tr>\n"
+			html << "<th>Status</th>\n"
+			html << "<td>%s</td>\n" % [
+				esc_ht(event["status"].to_s),
+			]
+			html << "</tr>\n"
+
+			html << "<tr>\n"
 			html << "<th>Service</th>\n"
 			html << "<td>%s</td>\n" % [
 				esc_ht(event["source"]["service"]),
@@ -108,7 +122,7 @@ class Script
 			html << "<tr>\n"
 			html << "<th>Line number</th>\n"
 			html << "<td>%s</td>\n" % [
-				esc_ht((event["location"]["line"] + 1).to_s),
+				esc_ht((event["location"]["line"].to_i + 1).to_s),
 			]
 			html << "</tr>\n"
 
@@ -149,13 +163,29 @@ class Script
 
 		html << "<form method=\"post\">\n"
 
-		html <<
-			"<p>" +
-			"<input " +
-				"type=\"submit\" " +
-				"name=\"mark-as-seen\" " +
-				"value=\"mark as seen\">" +
-			"</p>\n"
+		html << "<p>\n"
+
+		if event["status"] != "seen"
+
+			html <<
+				"<input " +
+					"type=\"submit\" " +
+					"name=\"mark-as-seen\" " +
+					"value=\"mark as seen\">\n"
+
+		end
+
+		if event["status"] != "unseen"
+
+			html <<
+				"<input " +
+					"type=\"submit\" " +
+					"name=\"mark-as-unseen\" " +
+					"value=\"mark as unseen\">\n"
+
+		end
+
+		html << "</p>\n"
 
 		html << "</form>\n"
 
