@@ -13,7 +13,7 @@ class Script
 
 		headers["content-type"] = "text/html; charset=utf-8"
 
-		html << "<! DOCTYPE html>\n"
+		html << "<!DOCTYPE html>\n"
 		html << "<html>\n"
 		html << "<head>\n"
 
