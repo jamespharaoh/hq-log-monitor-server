@@ -130,7 +130,17 @@ class Script
 			events.each do
 				|event|
 
-				html << "<tr class=\"event\">\n"
+				level_class =
+					case level_for_type(
+							event["source"]["service"],
+							event["type"])
+						when "critical" then "error"
+						when "warning" then "warning"
+					end
+
+				html << "<tr class=\"%s\">\n" % [
+					[ "event", level_class ].compact.join(" "),
+				]
 
 				html << "<td class=\"timestamp\">%s</td>\n" % [
 					esc_ht(event["timestamp"].to_s),
