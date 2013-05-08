@@ -89,6 +89,7 @@ class Script
 			html << "<th>File</th>\n"
 			html << "<th>Line</th>\n"
 			html << "<th>Type</th>\n"
+			html << "<th>Status</th>\n"
 			html << "<th>View</th>\n"
 			html << "</tr>\n"
 
@@ -109,11 +110,15 @@ class Script
 				]
 
 				html << "<td class=\"line\">%s</td>\n" % [
-					esc_ht(event["location"]["line"].to_s),
+					esc_ht((event["location"]["line"] + 1).to_s),
 				]
 
 				html << "<td class=\"type\">%s</td>\n" % [
 					esc_ht(event["type"]),
+				]
+
+				html << "<td class=\"status\">%s</td>\n" % [
+					esc_ht(event["status"]),
 				]
 
 				html << "<td class=\"view\">%s</td>\n" % [

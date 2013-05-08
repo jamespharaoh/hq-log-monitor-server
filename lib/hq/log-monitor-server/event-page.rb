@@ -155,6 +155,13 @@ class Script
 			html << "</tr>\n"
 
 			html << "<tr>\n"
+			html << "<th>Type</th>\n"
+			html << "<td>%s</td>\n" % [
+				esc_ht(event["type"]),
+			]
+			html << "</tr>\n"
+
+			html << "<tr>\n"
 			html << "<th>Filename</th>\n"
 			html << "<td>%s</td>\n" % [
 				esc_ht(event["location"]["file"]),
