@@ -76,8 +76,8 @@ class Script
 			html << "<tr>\n"
 			html << "<th>Host</th>\n"
 			html << "<th>Class</th>\n"
-			html << "<th>Alerts</th>\n"
-			html << "<th>Details</th>\n"
+			html << "<th>New</th>\n"
+			html << "<th>Total</th>\n"
 			html << "<th>View</th>\n"
 			html << "</tr>\n"
 
@@ -97,17 +97,12 @@ class Script
 					esc_ht(summary["_id"]["class"]),
 				]
 
-				html << "<td class=\"alerts\">%s</td>\n" % [
-					esc_ht(summary["combined"]["new"].to_s),
+				html << "<td class=\"new\">%s</td>\n" % [
+					esc_ht(status_breakdown(summary, "new")),
 				]
 
-				html << "<td class=\"detail\">%s</td>\n" % [
-					esc_ht(
-						summary["types"].map {
-							|type, counts|
-							"%s %s" % [ counts["new"], type ]
-						}.join ", "
-					),
+				html << "<td class=\"total\">%s</td>\n" % [
+					esc_ht(status_breakdown(summary, "total")),
 				]
 
 				html << "<td class=\"view\">%s</td>\n" % [
