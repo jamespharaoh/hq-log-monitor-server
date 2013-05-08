@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hq-log-monitor-server (0.6.0)
+    hq-log-monitor-server (0.7.0)
       bson_ext (>= 1.8.2)
       hq-tools (>= 0.2.0)
       libxml-ruby (>= 2.6.0)
