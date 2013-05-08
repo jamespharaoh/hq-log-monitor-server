@@ -22,11 +22,11 @@ class Script
 				summary["types"]
 					.select {
 						|type, counts|
-						counts["new"] > 0
+						counts[status] > 0
 					}
 					.map {
 						|type, counts|
-						"%s %s" % [ counts["new"], type ]
+						"%s %s" % [ counts[status], type ]
 					}
 					.join(", ")
 
