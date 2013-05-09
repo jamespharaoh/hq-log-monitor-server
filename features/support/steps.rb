@@ -37,7 +37,7 @@ end
 Given /^the time is (\d+)$/ do
 	|time_str|
 
-	Time.stub(:now).and_return { Time.at time_str.to_i }
+	set_time Time.at time_str.to_i
 
 end
 
