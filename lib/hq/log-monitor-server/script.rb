@@ -102,6 +102,12 @@ class Script
 		@db =
 			@mongo[@db_elem["name"]]
 
+		@db["events"].ensure_index \
+			"source.service" => Mongo::ASCENDING,
+			"source.class" => Mongo::ASCENDING,
+			"source.host" => Mongo::ASCENDING,
+			"timestamp" => Mongo::ASCENDING
+
 	end
 
 	def init_server
