@@ -31,7 +31,7 @@ class Script
 
 		# read from database
 
-		events =
+		all_events =
 			@db["events"]
 				.find({
 					"source.class" => source["class"],
@@ -39,6 +39,15 @@ class Script
 					"source.service" => source["service"],
 				})
 				.to_a
+
+		page_size = 100
+		page_num = req.GET["page"].to_i
+
+		page_start = page_num * page_size
+		page_end = page_start + page_size
+		page_count = (all_events.size + page_size - 1) / page_size
+
+		page_events = all_events[page_start...page_end] || []
 
 		title =
 			"%s %s \u2014 Log monitor" % [
@@ -103,12 +112,21 @@ class Script
 			esc_ht(title),
 		]
 
-		if events.empty?
+		if all_events.size > page_size || page_num > 0
+			pagination html, page_count, page_num
+		end
+
+		if all_events.empty?
 
 			html << "<p>No events have been logged for this service on this " +
 				"host</p>\n"
 
+		elsif page_events.empty?
+
+			html << "<p>No events on this page</p>\n"
+
 		else
+
 
 			html << "<table id=\"events\" class=\"table table-striped\">\n"
 			html << "<thead>\n"
@@ -127,7 +145,7 @@ class Script
 
 			unseen_count = 0
 
-			events.each do
+			page_events.each do
 				|event|
 
 				html << "<tr class=\"%s\">\n" % [
@@ -175,6 +193,10 @@ class Script
 			html << "</tbody>\n"
 			html << "</table>\n"
 
+			if all_events.size > page_size || page_num > 0
+				pagination html, page_count, page_num
+			end
+
 			html << "<form method=\"post\">\n"
 
 			html << "<p>\n"
@@ -209,6 +231,29 @@ class Script
 		html << "</html>\n"
 
 		return 200, headers, html
+
+	end
+
+	def pagination html, page_count, page_num
+
+		html << "<div class=\"pagination\">\n"
+		html << "<ul>\n"
+
+		page_count.times do
+			|num|
+
+			if num == page_num
+				html << "<li class=\"active\">"
+			else
+				html << "<li>"
+			end
+
+			html << "<a href=\"?page=#{num}\">#{num+1}</a>\n"
+
+		end
+
+		html << "</ul>\n"
+		html << "</div>\n"
 
 	end
 
