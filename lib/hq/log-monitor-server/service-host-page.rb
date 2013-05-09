@@ -31,7 +31,23 @@ class Script
 
 		# read from database
 
-		all_events =
+		all_events_count =
+			@db["events"]
+				.find({
+					"source.class" => source["class"],
+					"source.host" => source["host"],
+					"source.service" => source["service"],
+				})
+				.count
+
+		page_size = 100
+		page_num = req.GET["page"].to_i
+
+		page_start = page_num * page_size
+		page_end = page_start + page_size
+		page_count = (all_events_count + page_size - 1) / page_size
+
+		page_events =
 			@db["events"]
 				.find({
 					"source.class" => source["class"],
@@ -41,16 +57,9 @@ class Script
 				.sort({
 					"timestamp" => -1,
 				})
+				.skip(page_start)
+				.limit(page_size)
 				.to_a
-
-		page_size = 100
-		page_num = req.GET["page"].to_i
-
-		page_start = page_num * page_size
-		page_end = page_start + page_size
-		page_count = (all_events.size + page_size - 1) / page_size
-
-		page_events = all_events[page_start...page_end] || []
 
 		title =
 			"%s %s \u2014 Log monitor" % [
@@ -115,11 +124,11 @@ class Script
 			esc_ht(title),
 		]
 
-		if all_events.size > page_size || page_num > 0
+		if all_events_count > page_size || page_num > 0
 			pagination html, page_count, page_num
 		end
 
-		if all_events.empty?
+		if all_events_count == 0
 
 			html << "<p>No events have been logged for this service on this " +
 				"host</p>\n"
@@ -196,7 +205,7 @@ class Script
 			html << "</tbody>\n"
 			html << "</table>\n"
 
-			if all_events.size > page_size || page_num > 0
+			if all_events_count > page_size || page_num > 0
 				pagination html, page_count, page_num
 			end
 
