@@ -19,7 +19,6 @@ class Script
 
 	def initialize
 		@status = 0
-		@mutex = Mutex.new
 	end
 
 	def main
@@ -34,11 +33,12 @@ class Script
 	def start
 		setup
 		Thread.new { run }
-		Thread.new { background }
+		@background_thread = Thread.new { background }
 	end
 
 	def stop
 		@web_server.shutdown
+		stop_checks
 	end
 
 	def setup
@@ -50,22 +50,6 @@ class Script
 
 	def run
 		@web_server.start
-	end
-
-	def background
-
-		@next_check = Time.now
-
-		loop do
-			sleep 1 while Time.now < @next_check
-			begin
-				do_checks
-			rescue => e
-				$stderr.puts e, *e.backtrace
-				sleep 10
-			end
-		end
-
 	end
 
 	def process_args
