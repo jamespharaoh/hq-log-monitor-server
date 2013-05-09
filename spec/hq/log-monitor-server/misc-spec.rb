@@ -33,88 +33,42 @@ describe Script do
 
 		before do
 			require "xml"
-		end
-
-		it "returns nil if the service does not exist" do
-			
-			subject.instance_variable_set \
-				"@icinga_elem",
-				XML::Document.string("<icinga/>")
-
-			ret = subject.level_for_type "service", "type"
-
-			ret.should == nil
-
-		end
-
-		it "returns nil if the type does not exist" do
-			
-			subject.instance_variable_set \
-				"@icinga_elem",
-				XML::Document.string("
-					<icinga>
-						<service name=\"service\"/>
-					</icinga>
-				")
-
-			ret = subject.level_for_type "service", "type"
-
-			ret.should == nil
-
-		end
-
-		it "returns nil if the type has no level" do
-			
-			subject.instance_variable_set \
-				"@icinga_elem",
-				XML::Document.string("
-					<icinga>
-						<service name=\"service\">
-							<type name=\"type\"/>
-						</service>
-					</icinga>
-				")
-
-			ret = subject.level_for_type "service", "type"
-
-			ret.should == nil
-
-		end
-
-		it "returns nil if the type has an empty level" do
-			
-			subject.instance_variable_set \
-				"@icinga_elem",
-				XML::Document.string("
-					<icinga>
-						<service name=\"service\">
-							<type name=\"type\" level=\"\"/>
-						</service>
-					</icinga>
-				")
-
-			ret = subject.level_for_type "service", "type"
-
-			ret.should == nil
-
-		end
-
-		it "returns the appropriate level if all is well" do
-			
 			subject.instance_variable_set \
 				"@icinga_elem",
 				XML::Document.string("
 					<icinga>
 						<service name=\"service\">
 							<type name=\"type\" level=\"level\"/>
+							<type name=\"no-level\"/>
+							<type name=\"empty-level\" level=\"\"/>
 						</service>
 					</icinga>
 				")
+		end
 
+		it "returns nil if the service does not exist" do
+			ret = subject.level_for_type "blah", "type"
+			ret.should == nil
+		end
+
+		it "returns nil if the type does not exist" do
+			ret = subject.level_for_type "service", "blah"
+			ret.should == nil
+		end
+
+		it "returns nil if the type has no level" do
+			ret = subject.level_for_type "service", "no-level"
+			ret.should == nil
+		end
+
+		it "returns nil if the type has an empty level" do
+			ret = subject.level_for_type "service", "empty-level"
+			ret.should == nil
+		end
+
+		it "returns the appropriate level if all is well" do
 			ret = subject.level_for_type "service", "type"
-
 			ret.should == "level"
-
 		end
 
 	end
