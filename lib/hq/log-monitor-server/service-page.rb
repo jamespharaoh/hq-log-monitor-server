@@ -12,6 +12,14 @@ class Script
 				})
 				.to_a
 
+		summaries.sort_by! {
+			|summary|
+			[
+				summary["_id"]["host"],
+				summary["_id"]["class"],
+			]
+		}
+
 		title =
 			"%s - Log monitor" % [
 				context[:service],

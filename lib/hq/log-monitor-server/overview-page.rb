@@ -8,6 +8,11 @@ class Script
 		summaries_by_service =
 			get_summaries_by_service
 
+		summaries =
+			summaries_by_service
+				.values
+				.sort_by { |summary| summary["_id"]["service"] }
+
 		headers = {}
 		html = []
 
@@ -57,7 +62,7 @@ class Script
 			esc_ht(title),
 		]
 
-		if summaries_by_service.empty?
+		if summaries.empty?
 			html << "<p>No events have been logged</p>\n"
 		else
 
@@ -74,8 +79,8 @@ class Script
 			html << "</thead>\n"
 			html << "<tbody>\n"
 
-			summaries_by_service.each do
-				|service, summary|
+			summaries.each do
+				|summary|
 
 				html << "<tr class=\"%s\">\n" % [
 					esc_ht([

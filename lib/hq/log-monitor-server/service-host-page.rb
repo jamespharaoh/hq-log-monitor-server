@@ -38,6 +38,9 @@ class Script
 					"source.host" => source["host"],
 					"source.service" => source["service"],
 				})
+				.sort({
+					"timestamp" => -1,
+				})
 				.to_a
 
 		page_size = 100
