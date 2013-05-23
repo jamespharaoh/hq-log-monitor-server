@@ -127,6 +127,7 @@ class Script
 
 				critical_count = 0
 				warning_count = 0
+				other_count = 0
 				unknown_count = 0
 
 				summaries =
@@ -137,12 +138,14 @@ class Script
 						|type_name, type_info|
 
 						case level_for_type service_name, type_name
-						when "critical"
-							critical_count += type_info["new"]
-						when "warning"
-							warning_count += type_info["new"]
-						else
-							unknown_count += type_info["new"]
+							when "critical"
+								critical_count += type_info["new"]
+							when "warning"
+								warning_count += type_info["new"]
+							when "none"
+								other_count += type_info["new"]
+							else
+								unknown_count += type_info["new"]
 						end
 
 					end
@@ -178,6 +181,10 @@ class Script
 
 				if warning_count > 0
 					parts << "%d warning" % warning_count
+				end
+
+				if other_count > 0
+					parts << "%d other" % other_count
 				end
 
 				if unknown_count > 0
