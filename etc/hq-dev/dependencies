@@ -1,0 +1,6 @@
+bson_ext 1.8.5
+hq-tools 0.8.1
+libxml-ruby 2.6.0
+mongo 1.8.5
+multi_json 1.7.2
+rack 1.5.1
